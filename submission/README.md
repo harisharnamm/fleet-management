@@ -2,6 +2,8 @@
 
 **Course:** Staff Graded Assignment 2 (SGA 2)  
 **Project:** FleetFlow Enterprise Fleet Management System  
+**Name:** Harisharnam  
+**Roll No:** 2023EBCS406  
 **Database:** Neon Serverless PostgreSQL (`production` branch, PostGIS enabled)  
 **GitHub Repository:** [https://github.com/harisharnamm/fleet-management.git](https://github.com/harisharnamm/fleet-management.git)
 
@@ -21,7 +23,10 @@ submission/
 │   ├── 02_sms_notification_status_change.png     # Mock SMS generation on status change & critical alerts
 │   ├── 03_api_gateway_routing_and_auth.png       # Gateway routing, API key check (401) & rate limiting (429)
 │   ├── 04_swagger_ui_documentation.png           # Interactive Swagger UI (OpenAPI 3.0) at port 4001
-│   └── 05_fleet_dashboard_overview.png           # Executive fleet telemetry dashboard & analytics
+│   ├── 05_fleet_dashboard_overview.png           # Executive fleet telemetry dashboard & analytics (fully loaded)
+│   ├── 06_vehicle_inventory_management.png       # Vehicle inventory table, status filters & registration
+│   ├── 07_vehicle_details_and_telemetry.png       # Individual vehicle telemetry view & status update trigger
+│   └── 08_automated_mocha_test_run.png           # Automated Mocha test run (all 25 tests passing in 27s)
 │
 ├── codebase/                     # Clean, runnable application codebase
 │   ├── backend/                  # Node.js ESM Express modular monolith with PostGIS
@@ -65,8 +70,8 @@ npm run dev
 
 Service endpoints:
 - **Frontend Dashboard:** [http://localhost:5173](http://localhost:5173)
-- **API Gateway:** `http://localhost:4000`
-- **Backend API:** `http://localhost:4001`
+- **API Gateway:** [http://localhost:4000](http://localhost:4000)
+- **Backend API:** [http://localhost:4001](http://localhost:4001)
 - **Swagger Documentation:** [http://localhost:4001/api-docs](http://localhost:4001/api-docs)
 
 ---

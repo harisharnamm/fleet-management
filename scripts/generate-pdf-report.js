@@ -16,12 +16,15 @@ function getBase64Image(filename) {
 }
 
 async function generatePdf() {
-  console.log('Encoding screenshots...');
+  console.log('Encoding all screenshots...');
   const imgGeo = getBase64Image('01_geolocation_and_nearby_search.png');
   const imgSms = getBase64Image('02_sms_notification_status_change.png');
   const imgGw = getBase64Image('03_api_gateway_routing_and_auth.png');
   const imgSwagger = getBase64Image('04_swagger_ui_documentation.png');
   const imgDash = getBase64Image('05_fleet_dashboard_overview.png');
+  const imgVehicles = getBase64Image('06_vehicle_inventory_management.png');
+  const imgDetails = getBase64Image('07_vehicle_details_and_telemetry.png');
+  const imgMocha = getBase64Image('08_automated_mocha_test_run.png');
 
   const html = `
 <!DOCTYPE html>
@@ -32,13 +35,13 @@ async function generatePdf() {
   <style>
     @page {
       size: A4;
-      margin: 20mm 15mm 20mm 15mm;
+      margin: 18mm 14mm 18mm 14mm;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #1e293b;
       line-height: 1.5;
-      font-size: 10.5pt;
+      font-size: 10pt;
     }
     .page-break {
       page-break-before: always;
@@ -46,22 +49,22 @@ async function generatePdf() {
     header {
       border-bottom: 2px solid #2563eb;
       padding-bottom: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     .project-title {
-      font-size: 22pt;
+      font-size: 21pt;
       font-weight: 800;
       color: #0f172a;
       margin: 0;
     }
     .project-subtitle {
-      font-size: 13pt;
+      font-size: 12.5pt;
       color: #475569;
       margin-top: 4px;
     }
     .meta-box {
       background: #f8fafc;
-      border: 1px solid #e2e8f0;
+      border: 1px solid #cbd5e1;
       border-radius: 6px;
       padding: 10px 14px;
       margin-top: 12px;
@@ -71,27 +74,27 @@ async function generatePdf() {
       font-size: 9.5pt;
     }
     h2 {
-      font-size: 13pt;
+      font-size: 12.5pt;
       font-weight: 700;
       color: #1e3a8a;
       border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 4px;
-      margin-top: 18px;
+      padding-bottom: 3px;
+      margin-top: 16px;
       margin-bottom: 8px;
     }
     h3 {
-      font-size: 11pt;
+      font-size: 10.5pt;
       font-weight: 600;
       color: #0f172a;
-      margin-top: 12px;
+      margin-top: 10px;
       margin-bottom: 4px;
     }
     p {
-      margin: 0 0 8px 0;
+      margin: 0 0 7px 0;
     }
     ul, ol {
-      margin: 0 0 10px 0;
-      padding-left: 20px;
+      margin: 0 0 9px 0;
+      padding-left: 18px;
     }
     li {
       margin-bottom: 3px;
@@ -99,12 +102,12 @@ async function generatePdf() {
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 10px 0;
-      font-size: 9pt;
+      margin: 8px 0;
+      font-size: 8.5pt;
     }
     th, td {
       border: 1px solid #cbd5e1;
-      padding: 6px 8px;
+      padding: 5px 7px;
       text-align: left;
     }
     th {
@@ -117,11 +120,11 @@ async function generatePdf() {
       padding: 2px 6px;
       border-radius: 4px;
       font-weight: 600;
-      font-size: 8pt;
+      font-size: 7.5pt;
     }
     .badge-pass { background: #dcfce7; color: #166534; }
     .screenshot-container {
-      margin: 12px 0;
+      margin: 10px 0;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
       overflow: hidden;
@@ -135,16 +138,16 @@ async function generatePdf() {
       margin: 0 auto;
     }
     .caption {
-      font-size: 8.5pt;
+      font-size: 8pt;
       color: #475569;
-      padding: 6px;
+      padding: 5px 8px;
       background: #f1f5f9;
       border-top: 1px solid #cbd5e1;
       font-style: italic;
     }
     code {
       font-family: ui-monospace, Menlo, Monaco, Consolas, monospace;
-      font-size: 8.5pt;
+      font-size: 8pt;
       background: #f1f5f9;
       padding: 2px 4px;
       border-radius: 3px;
@@ -154,7 +157,7 @@ async function generatePdf() {
       border-left: 4px solid #3b82f6;
       padding: 8px 12px;
       margin: 10px 0;
-      font-size: 9pt;
+      font-size: 8.5pt;
       color: #1e40af;
     }
   </style>
@@ -165,8 +168,8 @@ async function generatePdf() {
     <div class="project-title">FleetFlow — Fleet Management System</div>
     <div class="project-subtitle">Staff Graded Assignment 2 (SGA 2) — Technical Submission Report</div>
     <div class="meta-box">
-      <div><strong>Author:</strong> Senior Full-Stack Software Engineer</div>
-      <div><strong>Evaluation Target:</strong> SGA 2 Production Compliance</div>
+      <div><strong>Name:</strong> Harisharnam</div>
+      <div><strong>Roll No:</strong> 2023EBCS406</div>
       <div><strong>Database:</strong> Neon Serverless PostgreSQL (PostGIS)</div>
       <div><strong>Repository:</strong> https://github.com/harisharnamm/fleet-management.git</div>
     </div>
@@ -207,42 +210,64 @@ async function generatePdf() {
 
   <div class="page-break"></div>
 
-  <h2>4. Visual Verification & Screenshots</h2>
-  <p>The following visual captures demonstrate the live running system:</p>
+  <h2>4. Visual Verification & System Screenshots</h2>
+  <p>The following visual captures demonstrate the operational features across all required assignment categories:</p>
 
-  <h3>A. Vehicle Geolocation & Nearby Proximity Search</h3>
-  <div class="screenshot-container">
-    <img src="${imgGeo}" alt="Live Map Tracking and Radius Search">
-    <div class="caption">Figure 1: OpenStreetMap rendering live vehicle markers with custom status pins, search radius boundary circle (5,000 m), and closest vehicle proximity list calculated in metres by PostGIS.</div>
-  </div>
-
-  <h3>B. SMS Notification Generation on Status Change & Event</h3>
-  <div class="screenshot-container">
-    <img src="${imgSms}" alt="Mock SMS Notifications Audit Log">
-    <div class="caption">Figure 2: Notifications Center showing persisted carrier receipts (Verizon, T-Mobile, AT&T), simulated latency, delivered statuses, and critical alert messages triggered by telemetry.</div>
-  </div>
-
-  <div class="page-break"></div>
-
-  <h3>C. API Gateway Routing, Authentication & Rate Limiting</h3>
-  <div class="screenshot-container">
-    <img src="${imgGw}" alt="API Gateway Terminal Verification">
-    <div class="caption">Figure 3: Gateway terminal tests verifying public /health, 401 on missing/invalid x-api-key, 200 on authorized proxying, and 429 on sliding-window rate limit exceeded.</div>
-  </div>
-
-  <h3>D. Interactive Swagger UI Documentation</h3>
-  <div class="screenshot-container">
-    <img src="${imgSwagger}" alt="Swagger UI API Documentation">
-    <div class="caption">Figure 4: Swagger UI mounted at http://localhost:4001/api-docs documenting all 14 REST endpoints, schemas, parameters, and security definitions.</div>
-  </div>
-
-  <div class="page-break"></div>
-
-  <h3>E. Fleet Executive Dashboard Overview</h3>
+  <h3>1. Executive Fleet Dashboard Overview (Fully Loaded)</h3>
   <div class="screenshot-container">
     <img src="${imgDash}" alt="Fleet Overview Dashboard">
-    <div class="caption">Figure 5: Executive Fleet Dashboard showing real-time fleet KPIs (Total Vehicles, Active Ratio, Average Speed), battery health distribution, and speed analytics.</div>
+    <div class="caption">Figure 1: Fully-rendered Executive Dashboard showing real-time fleet KPIs (9 Vehicles, Active/Maintenance breakdown, Average Speed), battery health distribution, and recent alert logs.</div>
   </div>
+
+  <h3>2. Vehicle Geolocation & Nearby Proximity Search</h3>
+  <div class="screenshot-container">
+    <img src="${imgGeo}" alt="Live Map Tracking and Radius Search">
+    <div class="caption">Figure 2: OpenStreetMap rendering live vehicle markers with custom status pins, search radius boundary circle (5,000 m), address geocoder, and nearest vehicle proximity list calculated in metres by PostGIS.</div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <h3>3. SMS Notification Generation on Status Change & Critical Alert</h3>
+  <div class="screenshot-container">
+    <img src="${imgSms}" alt="Mock SMS Notifications Audit Log">
+    <div class="caption">Figure 3: Notifications Center showing persisted carrier receipts (Verizon, T-Mobile, AT&T), simulated latency, delivered statuses, and critical alert messages triggered by telemetry thresholds.</div>
+  </div>
+
+  <h3>4. Fleet Vehicle Inventory Management</h3>
+  <div class="screenshot-container">
+    <img src="${imgVehicles}" alt="Vehicle Inventory Table">
+    <div class="caption">Figure 4: Vehicle Inventory screen with status filter tabs, search filter, vehicle details, latest telemetry fix badge, and administrative registration controls.</div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <h3>5. Vehicle Telemetry & Incident Details</h3>
+  <div class="screenshot-container">
+    <img src="${imgDetails}" alt="Vehicle Details and Telemetry">
+    <div class="caption">Figure 5: Individual Vehicle view for FLT-101-TX showing real-time telemetry fix, operational status change controls (triggering notifications), and event history.</div>
+  </div>
+
+  <h3>6. API Gateway Routing, Authentication & Rate Limiting</h3>
+  <div class="screenshot-container">
+    <img src="${imgGw}" alt="API Gateway Terminal Verification">
+    <div class="caption">Figure 6: Gateway terminal tests verifying public /health, 401 on missing/invalid x-api-key, 200 on authorized proxying, and 429 on sliding-window rate limit exceeded.</div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <h3>7. Interactive Swagger UI Documentation</h3>
+  <div class="screenshot-container">
+    <img src="${imgSwagger}" alt="Swagger UI API Documentation">
+    <div class="caption">Figure 7: Swagger UI mounted at http://localhost:4001/api-docs documenting all 14 REST endpoints, schemas, parameters, and security definitions.</div>
+  </div>
+
+  <h3>8. Automated Mocha Test Suite Execution (25/25 Passing)</h3>
+  <div class="screenshot-container">
+    <img src="${imgMocha}" alt="Automated Test Suite Execution">
+    <div class="caption">Figure 8: Automated Mocha/Chai/Supertest execution verifying all 7 required SGA 2 test flows directly against live Neon PostgreSQL (25 passing, 27s).</div>
+  </div>
+
+  <div class="page-break"></div>
 
   <h2>5. Automated Test Results (Mocha / Chai / Supertest)</h2>
   <p>
