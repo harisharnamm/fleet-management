@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+const isProduction = import.meta.env.PROD;
+const API_BASE_URL = import.meta.env.VITE_API_URL || (isProduction ? '/api' : 'http://localhost:4000/api');
 const GATEWAY_API_KEY = import.meta.env.VITE_GATEWAY_API_KEY || 'dev-secret-key-12345';
 
 export const apiClient = axios.create({
