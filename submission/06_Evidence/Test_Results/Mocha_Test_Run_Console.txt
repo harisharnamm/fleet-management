@@ -1,0 +1,74 @@
+> fleet-management-system@1.0.0 test
+> npm --prefix backend test
+
+> fleet-management-backend@1.0.0 test
+> NODE_ENV=test mocha --timeout 15000 --exit tests/**/*.test.js
+
+  Flow 1: Login and JWT Authentication
+✓ Connected to Neon PostgreSQL (Branch: production)
+[BACKEND ERROR]: Error: Invalid email or password.
+    at AuthService.login (file:///Users/mypro16/Desktop/Fleet%20Management%20Project%20SGA/backend/src/modules/auth/auth.service.js:54:21)
+    at async loginController (file:///Users/mypro16/Desktop/Fleet%20Management%20Project%20SGA/backend/src/modules/auth/auth.controller.js:6:20) {
+  statusCode: 401,
+  code: 'AUTH_INVALID_CREDENTIALS'
+}
+    ✔ should reject login with missing or invalid credentials (401) (3728ms)
+    ✔ should reject login when payload fails validation (400)
+    ✔ should authenticate valid user and return a signed JWT token (427ms)
+    ✔ should allow accessing protected /api/auth/me with valid Bearer token (846ms)
+    ✔ should reject protected route when Authorization token is missing or malformed
+
+  Flow 2: Vehicle Registration and Retrieval
+    ✔ should register a new vehicle and retrieve it by ID (2314ms)
+[BACKEND ERROR]: Error: Registration number 'FLT-101-TX' is already registered.
+    at VehiclesService.createVehicle (file:///Users/mypro16/Desktop/Fleet%20Management%20Project%20SGA/backend/src/modules/vehicles/vehicles.service.js:160:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async createVehicleController (file:///Users/mypro16/Desktop/Fleet%20Management%20Project%20SGA/backend/src/modules/vehicles/vehicles.controller.js:25:24) {
+  statusCode: 409,
+  code: 'DUPLICATE_REGISTRATION_NUMBER'
+}
+    ✔ should reject duplicate vehicle registration numbers with 409 Conflict (321ms)
+    ✔ should list all vehicles and support filtering by status (328ms)
+
+  Flow 3: Telemetry Submission and Persistence
+    ✔ should accept telemetry data and correctly persist PostGIS POINT(lng lat) (1042ms)
+[BACKEND ERROR]: Error: Cannot submit telemetry: Vehicle '00000000-0000-0000-0000-000000000000' does not exist.
+    at TelemetryService.recordTelemetry (file:///Users/mypro16/Desktop/Fleet%20Management%20Project%20SGA/backend/src/modules/telemetry/telemetry.service.js:29:21)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async submitTelemetryController (file:///Users/mypro16/Desktop/Fleet%20Management%20Project%20SGA/backend/src/modules/telemetry/telemetry.controller.js:6:20) {
+  statusCode: 404,
+  code: 'VEHICLE_NOT_FOUND'
+}
+    ✔ should reject telemetry for non-existent vehicle with 404 (348ms)
+    ✔ should detect critical events (low battery, emergency stop, engine overheat) and trigger mock SMS (2581ms)
+
+  Flow 4: Vehicle Status Update Triggering a Notification
+    ✔ should automatically trigger and persist a Mock SMS notification when vehicle status changes to maintenance (1633ms)
+    ✔ should allow manually triggering a simulated SMS alert with delivery status tracking (298ms)
+
+  Flow 5: RBAC Rejection of Unauthorized Vehicle Deletion
+    ✔ should reject vehicle deletion by viewer with 403 Forbidden
+    ✔ should reject vehicle deletion by fleet_manager with 403 Forbidden
+[BACKEND ERROR]: Error: Vehicle with ID 'c0ba76a2-3557-46d4-b116-736e011965ed' not found.
+    at VehiclesService.getVehicleById (file:///Users/mypro16/Desktop/Fleet%20Management%20Project%20SGA/backend/src/modules/vehicles/vehicles.service.js:99:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async getVehicleController (file:///Users/mypro16/Desktop/Fleet%20Management%20Project%20SGA/backend/src/modules/vehicles/vehicles.controller.js:16:21) {
+  statusCode: 404,
+  code: 'VEHICLE_NOT_FOUND'
+}
+    ✔ should allow vehicle deletion by admin (200) (1709ms)
+
+  Flow 6: Nearby Vehicle Search with Mocked Geolocation
+    ✔ should find vehicles within a 3,000 metre radius and calculate distance in metres (307ms)
+    ✔ should include more distant vehicles when radius is expanded to 25,000 metres (296ms)
+    ✔ should reject invalid coordinates or radius with 400 Validation Error
+    ✔ should geocode address to valid GPS coordinates (lat, lng)
+
+  Flow 7: Gateway API Key Verification and Rate Limiting
+    ✔ should allow /health on Gateway without an API key
+    ✔ should reject requests to /api/* when x-api-key header is missing with 401
+    ✔ should reject requests with an invalid x-api-key with 401
+    ✔ should accept requests when valid x-api-key is supplied
+    ✔ should enforce rate limiting and return 429 when threshold is exceeded (54ms)
+
+  25 passing (27s)

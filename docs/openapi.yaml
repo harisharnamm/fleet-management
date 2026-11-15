@@ -1,0 +1,418 @@
+openapi: 3.0.3
+info:
+  title: Fleet Management System API
+  version: 1.0.0
+  description: |
+    Comprehensive enterprise API for managing vehicle registries, real-time GPS telemetry, PostGIS geospatial radius queries, and automated event notifications.
+    Part of Staff Graded Assignment 2 (SGA 2).
+servers:
+  - url: http://localhost:4000/api
+    description: API Gateway (Primary Client Gateway)
+  - url: http://localhost:4001/api
+    description: Backend Service (Direct Internal Access)
+
+tags:
+  - name: Authentication
+    description: User authentication, JWT issuance, and profile retrieval
+  - name: Users
+    description: User account administration (Admin role only)
+  - name: Vehicles
+    description: Fleet vehicle inventory and operational lifecycle management
+  - name: Telemetry
+    description: High-frequency GPS coordinates, battery, fuel, and engine telemetry intake
+  - name: Geolocation
+    description: PostGIS-powered nearby vehicle search and spatial tracking
+  - name: Notifications
+    description: Simulated SMS delivery receipts and operational incident alerting
+
+paths:
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: User login
+      description: Authenticates user credentials and returns a signed JSON Web Token.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@fleetms.com
+                password:
+                  type: string
+                  example: Password123!
+      responses:
+        200:
+          description: Login successful
+        401:
+          description: Invalid email or password
+
+  /auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register user
+      description: Registers a new user account.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, full_name]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                full_name:
+                  type: string
+                role:
+                  type: string
+                  enum: [admin, fleet_manager, viewer]
+                  default: viewer
+      responses:
+        201:
+          description: User created
+
+  /auth/me:
+    get:
+      tags: [Authentication]
+      summary: Get current authenticated user
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      responses:
+        200:
+          description: Profile retrieved
+
+  /users:
+    get:
+      tags: [Users]
+      summary: List all users
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      responses:
+        200:
+          description: Users list
+
+  /vehicles:
+    get:
+      tags: [Vehicles]
+      summary: List all vehicles
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, maintenance, inactive]
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [truck, van, sedan, suv, electric]
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: Vehicle list retrieved
+
+    post:
+      tags: [Vehicles]
+      summary: Register a new vehicle
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [vin, registration_number, make, model, year]
+              properties:
+                vin:
+                  type: string
+                  example: 1HGCR2F83HA001122
+                registration_number:
+                  type: string
+                  example: FLT-777-TX
+                make:
+                  type: string
+                  example: Ford
+                model:
+                  type: string
+                  example: F-150 Lightning
+                year:
+                  type: integer
+                  example: 2023
+                status:
+                  type: string
+                  enum: [active, maintenance, inactive]
+                  default: active
+                type:
+                  type: string
+                  enum: [truck, van, sedan, suv, electric]
+                  default: truck
+      responses:
+        201:
+          description: Vehicle registered
+        409:
+          description: Duplicate registration number or VIN
+
+  /vehicles/{id}:
+    get:
+      tags: [Vehicles]
+      summary: Get vehicle by ID
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Vehicle details retrieved
+        404:
+          description: Vehicle not found
+
+    patch:
+      tags: [Vehicles]
+      summary: Update vehicle status or details
+      description: Status transitions automatically trigger operational events and Mock SMS notifications.
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [active, maintenance, inactive]
+      responses:
+        200:
+          description: Vehicle updated
+
+    delete:
+      tags: [Vehicles]
+      summary: Delete vehicle (Admin only)
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Vehicle deleted
+        403:
+          description: Forbidden (Requires Admin role)
+
+  /telemetry:
+    post:
+      tags: [Telemetry]
+      summary: Submit telemetry reading
+      description: Persists GPS coordinates and operational telemetry with PostGIS geography point.
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [vehicle_id, speed, latitude, longitude, odometer]
+              properties:
+                vehicle_id:
+                  type: string
+                  format: uuid
+                speed:
+                  type: number
+                  example: 65.5
+                battery_level:
+                  type: number
+                  example: 80.0
+                fuel_level:
+                  type: number
+                  example: 55.0
+                engine_temp:
+                  type: number
+                  example: 91.0
+                latitude:
+                  type: number
+                  example: 37.7792
+                longitude:
+                  type: number
+                  example: -122.4140
+                odometer:
+                  type: number
+                  example: 14250.2
+                event_type:
+                  type: string
+                  enum: [NORMAL, ENGINE_FAULT, LOW_BATTERY, EMERGENCY_STOP, OVERSPEED_WARNING, ENGINE_OVERHEAT]
+                  example: NORMAL
+                emergency_stop:
+                  type: boolean
+                  example: false
+                engine_fault:
+                  type: boolean
+                  example: false
+      responses:
+        201:
+          description: Telemetry persisted
+
+  /maps/nearby:
+    get:
+      tags: [Geolocation]
+      summary: Find vehicles within geographical radius (metres)
+      description: PostGIS-backed query returning vehicles within specified radius from (lat, lng), ordered ascending by distance in metres.
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+          example: 37.7749
+        - name: lng
+          in: query
+          required: true
+          schema:
+            type: number
+          example: -122.4194
+        - name: radius
+          in: query
+          required: true
+          schema:
+            type: number
+          description: Search radius in metres
+          example: 5000
+      responses:
+        200:
+          description: Vehicles within radius retrieved
+
+  /maps/positions:
+    get:
+      tags: [Geolocation]
+      summary: Get all vehicle GPS locations for map tracking
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      responses:
+        200:
+          description: Positions retrieved
+
+  /maps/geocode:
+    get:
+      tags: [Geolocation]
+      summary: Geocode address or depot name into GPS coordinates
+      description: Converts a physical address, city, or fleet terminal name into latitude and longitude coordinates.
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: address
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Address or landmark name (e.g. San Francisco Fleet Depot)
+          example: San Francisco Fleet Depot
+      responses:
+        200:
+          description: Geocoded coordinates returned
+        400:
+          description: Address required
+
+  /notifications:
+    get:
+      tags: [Notifications]
+      summary: Retrieve simulated notification logs
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [queued, sent, delivered, failed]
+      responses:
+        200:
+          description: Notifications log retrieved
+
+  /notifications/simulate:
+    post:
+      tags: [Notifications]
+      summary: Manually trigger a simulated SMS dispatch
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipient:
+                  type: string
+                  example: "+14155551234"
+                message:
+                  type: string
+                  example: "Test incident notification"
+                simulateFailure:
+                  type: boolean
+                  default: false
+      responses:
+        201:
+          description: Simulated SMS dispatched
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API Gateway key (e.g. dev-secret-key-12345)
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: User authentication JWT token issued by /api/auth/login
