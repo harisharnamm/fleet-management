@@ -4,6 +4,7 @@
 **Project:** FleetFlow Enterprise Fleet Management System  
 **Name:** Harisharnam  
 **Roll No:** 2023EBCS406  
+**Live Deployed URL:** [https://fleet-management-jade-psi.vercel.app/login](https://fleet-management-jade-psi.vercel.app/login)  
 **Database:** Neon Serverless PostgreSQL (`production` branch, PostGIS enabled)  
 **GitHub Repository:** [https://github.com/harisharnamm/fleet-management.git](https://github.com/harisharnamm/fleet-management.git)
 

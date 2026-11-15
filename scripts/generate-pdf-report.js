@@ -170,6 +170,7 @@ async function generatePdf() {
     <div class="meta-box">
       <div><strong>Name:</strong> Harisharnam</div>
       <div><strong>Roll No:</strong> 2023EBCS406</div>
+      <div style="grid-column: span 2;"><strong>Live Deployed URL:</strong> <a href="https://fleet-management-jade-psi.vercel.app/login" style="color: #2563eb; font-weight: 600; text-decoration: none;">https://fleet-management-jade-psi.vercel.app/login</a></div>
       <div><strong>Database:</strong> Neon Serverless PostgreSQL (PostGIS)</div>
       <div><strong>Repository:</strong> https://github.com/harisharnamm/fleet-management.git</div>
     </div>
@@ -343,6 +344,10 @@ async function generatePdf() {
   </table>
 
   <h2>6. Quick Start & Evaluation Instructions</h2>
+  <div class="callout" style="background: #f0fdf4; border-left: 4px solid #16a34a; color: #14532d; font-size: 9pt; margin-bottom: 12px;">
+    <strong>Live Cloud Deployment on Vercel:</strong> Evaluators can directly access the production application at:<br>
+    <a href="https://fleet-management-jade-psi.vercel.app/login" style="color: #15803d; font-weight: 700; text-decoration: underline;">https://fleet-management-jade-psi.vercel.app/login</a>
+  </div>
   <ol>
     <li><strong>Install Dependencies:</strong> <code>npm run install:all</code></li>
     <li><strong>Run Automated Tests:</strong> <code>npm test</code> (validates all 25 assertions against Neon PostgreSQL)</li>
